@@ -14,7 +14,6 @@ import {
   Tr,
   Spinner,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
 import { RiAddLine, RiPencilFill } from "react-icons/ri";
 import { useQuery } from "react-query";
 
@@ -23,11 +22,25 @@ import { Pagination } from "../../components/Pagination";
 import { Sidebar } from "../../components/Sidebar";
 
 const UserList = () => {
-  const { data, isLoading, error } = useQuery("users", async () => {
-    const response = await fetch("http://localhost:3000/api/users");
-    const data = await response.json();
-    return data;
-  });
+  const { data, isLoading, isRefetching, error } = useQuery(
+    "users",
+    async () => {
+      const response = await fetch("http://localhost:3000/api/users");
+      const data = await response.json();
+      const users = data.users.map((user) => ({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        createdAt: new Date(user.createdAt).toLocaleString("pt-BR", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        }),
+      }));
+      return users;
+    },
+    { staleTime: 60 * 60 * 5 }
+  );
 
   return (
     <Box>
@@ -38,6 +51,7 @@ const UserList = () => {
           <Flex mb="8" justify="space-between" align="center">
             <Heading size="lg" fontWeight="normal">
               Usuários
+              {isRefetching && <Spinner size="sm" ml={4} />}
             </Heading>
 
             <Button
@@ -72,90 +86,36 @@ const UserList = () => {
               </Thead>
 
               <Tbody>
-                <Tr>
-                  <Td px="6">
-                    <Checkbox colorScheme="pink" />
-                  </Td>
+                {data.map(({ name, email, createdAt }) => (
+                  <Tr key={name}>
+                    <Td px="6">
+                      <Checkbox colorScheme="pink" />
+                    </Td>
 
-                  <Td>
-                    <Box>
-                      <Text fontWeight="bold">Gabi Ueno</Text>
-                      <Text fontSize="sm" color="gray.300">
-                        gabi@example.com
-                      </Text>
-                    </Box>
-                  </Td>
+                    <Td>
+                      <Box>
+                        <Text fontWeight="bold">{name}</Text>
+                        <Text fontSize="sm" color="gray.300">
+                          {email}
+                        </Text>
+                      </Box>
+                    </Td>
 
-                  <Td>04 de Abril 2021</Td>
+                    <Td>{createdAt}</Td>
 
-                  <Td>
-                    <Button
-                      as="a"
-                      size="sm"
-                      fontSize="sm"
-                      colorScheme="green"
-                      leftIcon={<Icon as={RiPencilFill} fontSize="16" />}
-                    >
-                      Editar
-                    </Button>
-                  </Td>
-                </Tr>
-                <Tr>
-                  <Td px="6">
-                    <Checkbox colorScheme="pink" />
-                  </Td>
-
-                  <Td>
-                    <Box>
-                      <Text fontWeight="bold">Gabi Ueno</Text>
-                      <Text fontSize="sm" color="gray.300">
-                        gabi@example.com
-                      </Text>
-                    </Box>
-                  </Td>
-
-                  <Td>04 de Abril 2021</Td>
-
-                  <Td>
-                    <Button
-                      as="a"
-                      size="sm"
-                      fontSize="sm"
-                      colorScheme="green"
-                      leftIcon={<Icon as={RiPencilFill} fontSize="16" />}
-                    >
-                      Editar
-                    </Button>
-                  </Td>
-                </Tr>
-                <Tr>
-                  <Td px="6">
-                    <Checkbox colorScheme="pink" />
-                  </Td>
-
-                  <Td>
-                    <Box>
-                      <Text fontWeight="bold">Gabi Ueno</Text>
-                      <Text fontSize="sm" color="gray.300">
-                        gabi@example.com
-                      </Text>
-                    </Box>
-                  </Td>
-
-                  <Td>04 de Abril 2021</Td>
-
-                  <Td>
-                    <Button
-                      as="a"
-                      size="sm"
-                      fontSize="sm"
-                      colorScheme="green"
-                      leftIcon={<Icon as={RiPencilFill} fontSize="16" />}
-                    >
-                      Editar
-                    </Button>
-                  </Td>
-                </Tr>
+                    <Td>
+                      <Button
+                        as="a"
+                        size="sm"
+                        fontSize="sm"
+                        colorScheme="green"
+                        leftIcon={<Icon as={RiPencilFill} fontSize="16" />}
+                      >
+                        Editar
+                      </Button>
+                    </Td>
+                  </Tr>
+                ))}
               </Tbody>
             </Table>
           )}
