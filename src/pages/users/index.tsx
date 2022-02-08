@@ -23,7 +23,9 @@ import { Sidebar } from "../../components/Sidebar";
 import { useUsers } from "../../hooks/useUsers";
 
 const UserList = () => {
-  const { data, isLoading, isRefetching, error } = useUsers();
+  const { isLoading, isRefetching, error, data } = useUsers(1, {
+    initialData: [],
+  });
 
   return (
     <Box>
@@ -69,7 +71,7 @@ const UserList = () => {
               </Thead>
 
               <Tbody>
-                {data.map(({ name, email, createdAt }) => (
+                {data.users.map(({ name, email, createdAt }) => (
                   <Tr key={name}>
                     <Td px="6">
                       <Checkbox colorScheme="pink" />
@@ -103,7 +105,7 @@ const UserList = () => {
             </Table>
           )}
 
-          <Pagination />
+          <Pagination totalCountOfRegisters={200} />
         </Box>
       </Flex>
     </Box>

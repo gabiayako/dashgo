@@ -1,7 +1,19 @@
 import { Box, HStack } from "@chakra-ui/react";
 import { PaginationButton } from "./PaginationButton";
 
-export const Pagination = () => {
+interface PaginationProps {
+  totalCountOfRegisters: number;
+  registersPerPage?: number;
+  currentPage?: number;
+  onPageChange?: (page: number) => void;
+}
+
+export const Pagination = ({
+  totalCountOfRegisters,
+  registersPerPage = 10,
+  currentPage = 1,
+  onPageChange,
+}: PaginationProps) => {
   return (
     <HStack mt={8} align="center" justify="space-between">
       <Box>
