@@ -22,6 +22,13 @@ import { Pagination } from "../../components/Pagination";
 import { Sidebar } from "../../components/Sidebar";
 import { useUsers } from "../../hooks/useUsers";
 
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+};
+
 const UserList = () => {
   const { isLoading, isRefetching, error, data } = useUsers(1, {
     initialData: [],
