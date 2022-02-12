@@ -112,7 +112,7 @@ const UserList = () => {
             </Table>
           )}
 
-          <Pagination totalCountOfRegisters={200} currentPage={199} />
+          <Pagination totalCountOfRegisters={200} currentPage={4} />
         </Box>
       </Flex>
     </Box>
