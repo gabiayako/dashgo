@@ -6,8 +6,8 @@ const siblingsCount = 1;
 interface PaginationProps {
   totalCountOfRegisters: number;
   registersPerPage?: number;
-  currentPage?: number;
-  onPageChange?: (page: number) => void;
+  currentPage: number;
+  onPageChange: (page: number) => void;
 }
 
 export const Pagination = ({
@@ -16,6 +16,7 @@ export const Pagination = ({
   currentPage = 1,
   onPageChange,
 }: PaginationProps) => {
+  console.log("current page", currentPage);
   const pages = getPages(currentPage, siblingsCount, totalCountOfRegisters);
   1 - currentPage - siblingsCount;
   return (
@@ -27,7 +28,12 @@ export const Pagination = ({
       <HStack spacing="2">
         {currentPage - siblingsCount > 1 ? (
           <>
-            <PaginationButton key={1} pageNumber={1} disabled={false} />
+            <PaginationButton
+              onPageChange={onPageChange}
+              key={1}
+              pageNumber={1}
+              disabled={currentPage === 1}
+            />
             {currentPage - siblingsCount > 2 ? (
               <Text color={"gray.300"} width="8" textAlign={"center"}>
                 ...
@@ -37,9 +43,10 @@ export const Pagination = ({
         ) : null}
         {pages.map((pageNumber) => (
           <PaginationButton
+            onPageChange={onPageChange}
             key={pageNumber}
             pageNumber={pageNumber}
-            disabled={pageNumber === 1}
+            disabled={pageNumber === currentPage}
           />
         ))}
         {currentPage + siblingsCount < totalCountOfRegisters ? (
@@ -51,9 +58,10 @@ export const Pagination = ({
             ) : null}
 
             <PaginationButton
+              onPageChange={onPageChange}
               key={totalCountOfRegisters}
               pageNumber={totalCountOfRegisters}
-              disabled={false}
+              disabled={totalCountOfRegisters === currentPage}
             />
           </>
         ) : null}

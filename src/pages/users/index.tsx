@@ -14,6 +14,7 @@ import {
   Tr,
   Spinner,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { RiAddLine, RiPencilFill } from "react-icons/ri";
 import { useQuery } from "react-query";
 
@@ -30,7 +31,8 @@ type User = {
 };
 
 const UserList = () => {
-  const { isLoading, isRefetching, error, data } = useUsers(1, {
+  const [page, setPage] = useState(1);
+  const { isLoading, isRefetching, error, data } = useUsers(page, {
     initialData: [],
   });
 
@@ -112,7 +114,11 @@ const UserList = () => {
             </Table>
           )}
 
-          <Pagination totalCountOfRegisters={200} currentPage={4} />
+          <Pagination
+            totalCountOfRegisters={data?.totalCount}
+            currentPage={page}
+            onPageChange={setPage}
+          />
         </Box>
       </Flex>
     </Box>
