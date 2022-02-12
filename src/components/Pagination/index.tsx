@@ -2,7 +2,7 @@ import { Box, HStack } from "@chakra-ui/react";
 import { PaginationButton } from "./PaginationButton";
 import { getPages } from "./utils";
 
-const siblingsCount = 2;
+const siblingsCount = 1;
 interface PaginationProps {
   totalCountOfRegisters: number;
   registersPerPage?: number;
@@ -17,7 +17,7 @@ export const Pagination = ({
   onPageChange,
 }: PaginationProps) => {
   const pages = getPages(currentPage, siblingsCount, totalCountOfRegisters);
-
+  1 - currentPage - siblingsCount;
   return (
     <HStack mt={8} align="center" justify="space-between">
       <Box>
@@ -25,6 +25,9 @@ export const Pagination = ({
       </Box>
 
       <HStack spacing="2">
+        {currentPage - siblingsCount > 1 ? (
+          <PaginationButton key={1} pageNumber={1} disabled={false} />
+        ) : null}
         {pages.map((pageNumber) => (
           <PaginationButton
             key={pageNumber}
@@ -32,6 +35,13 @@ export const Pagination = ({
             disabled={pageNumber === 1}
           />
         ))}
+        {currentPage + siblingsCount < totalCountOfRegisters ? (
+          <PaginationButton
+            key={totalCountOfRegisters}
+            pageNumber={totalCountOfRegisters}
+            disabled={false}
+          />
+        ) : null}
       </HStack>
     </HStack>
   );
